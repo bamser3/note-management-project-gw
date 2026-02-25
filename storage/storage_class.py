@@ -19,4 +19,3 @@ class Storage:
     def save_users(self, users: dict) -> None:
         with open(self.filepath, "w") as file:
             json.dump(users, file, indent= 4)
-        pass
