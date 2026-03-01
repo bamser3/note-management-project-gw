@@ -1,49 +1,94 @@
-
 import argparse
 from notes.note_manager import NoteManager
+from auth.auth_manager_class import User
+from storage.storage_class import Storage
+from auth.auth_manager_class import User
+
+storage = Storage()
 
 note_manager = NoteManager()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Notes Manager CLI")
+    parser = argparse.ArgumentParser(
+        description="Notes Manager CLI",
+        epilog="""
+Examples:
+
+Add a user:
+  python3 cli.py add-user Peter peter@gmail.com password123
+
+Add a note:
+  python3 cli.py add-note 1 "Shopping List" "Buy milk and eggs"
+
+List notes:
+  python3 cli.py list-notes
+
+Update a note:
+  python3 cli.py update-note 1 "Updated content"
+
+Delete a note:
+  python3 cli.py delete-note 1
+        """,
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+
     subparsers = parser.add_subparsers(dest="command")
 
-    
-    subparsers.add_parser("list-notes")
+    # --------------------
+    # Add User
+    # --------------------
+    user_parser = subparsers.add_parser("add-user")
+    user_parser.add_argument("name")
+    user_parser.add_argument("email")
+    user_parser.add_argument("password")
 
-    args = parser.parse_args()
-
-    if args.command == "list-notes":
-        print("Notes:", note_manager.get_notes())
-
-def main():
-    parser = argparse.ArgumentParser(description="Notes Manager CLI")
-    subparsers = parser.add_subparsers(dest="command")
-
-    # Create note
+    # --------------------
+    # Add Note
+    # --------------------
     create_parser = subparsers.add_parser("add-note")
     create_parser.add_argument("id")
     create_parser.add_argument("title")
     create_parser.add_argument("content")
 
-    # View notes
+    # --------------------
+    # List Notes
+    # --------------------
     subparsers.add_parser("list-notes")
 
-    # Update note
+    # --------------------
+    # Update Note
+    # --------------------
     update_parser = subparsers.add_parser("update-note")
     update_parser.add_argument("id")
     update_parser.add_argument("content")
 
-    # Delete note
+    # --------------------
+    # Delete Note
+    # --------------------
     delete_parser = subparsers.add_parser("delete-note")
     delete_parser.add_argument("id")
 
     args = parser.parse_args()
 
-    if args.command == "add-note":
+    # --------------------
+    # Command Handling
+    # --------------------
+    if args.command == "add-user":
+        user = User(args.name, args.email, args.password)
+        users = storage.load_users()
+        users.append(user)
+        storage.save_users(users)
+        print("User saved:", user.to_dict())
+
+    elif args.command == "add-note":
+        # create the Note object using NoteManager for consistency
         note = note_manager.add_note(args.id, args.title, args.content)
-        print("Note added:", note.to_dict())
+        # persist it using Storage
+        notes = storage.load_notes()
+        notes.append(note)
+        storage.save_notes(notes)
+        print("Note saved:", note.to_dict())
 
     elif args.command == "list-notes":
         print("Notes:", note_manager.get_notes())
@@ -56,7 +101,9 @@ def main():
         success = note_manager.delete_note(args.id)
         print("Deleted!" if success else "Note not found.")
 
+    else:
+        parser.print_help()
+
 
 if __name__ == "__main__":
-
     main()
