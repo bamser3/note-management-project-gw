@@ -1,5 +1,6 @@
 import pytest
-from notes_cli.auth.user_class import User
+from auth.auth_manager_class import User
+
 
 def test_user_creation():
     user = User("Peter", "peter@gmail.com", "password123")
@@ -22,7 +23,7 @@ def test_user_to_dict():
 def test_user_to_dict():
     user = User("Peter", "peter@gmail.com", "password123")
     data = user.to_dict()
-    user2 = User.to_dict(data)
+    user2 = User.from_dict(data)
     assert user2.name == "Peter"
     assert user2.email == "peter@gmail.com"
 
