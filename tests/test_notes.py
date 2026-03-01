@@ -1,5 +1,5 @@
 import pytest
-from notes.note_class import note
+from notes.note_class import Note
 
 def test_note_creation():
     note = Note("Test Note", "Hello World", "Peter")
@@ -20,6 +20,7 @@ def test_note_to_dict():
     assert data["title"] == "Test Note"
     assert data["content"] == "Hello World"
     assert data["user_id"] == "Peter"
+    assert data["status"] == "active"
 
 def test_note_from_dict():
     note = Note("Test Note", "Hello World", "Peter")

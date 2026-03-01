@@ -1,58 +1,48 @@
 import json
-import os
-from typing import Dict, Optional, List
+from auth.user_class import User
+from notes.note_class import Note
 
 class Storage:
-    
-    def __init__(self, user_file: str, note_file: str = "notes.json"):
+
+    def __init__(self, user_file="storage/data/user_file.json", note_file="storage/data/note_file.json"):
         self.user_file = user_file
         self.note_file = note_file
-    
-    def load_users(self) -> dict:
-        if not os.path.exists(self.user_file):
-            return {}
-        
-        with open(self.user_file, "r") as file:
-            try:
-                return json.load(file)
-            except json.JSONDecodeError:
-                return {}
-    
-    def save_users(self, users: dict) -> None:
-        with open(self.user_file, "w") as file:
-            json.dump(users, file, indent= 4)
 
-   def add_user(self, user_id: str, user_data: dict)-> None:
-        user = json.load(open(self.user_file)) if os.path.exists(self.user_file) else {}
-        user[user_id] = user_data
-        self._save(self.user_file, users)
+        self._ensure_file(self.user_file)
+        self._ensure_file(self.note_file)
 
-   def update_user(self, user_id: str, user_data: dict) -> bool:
-        user = json.load(open(self.user_file)) if os.path.exists(self.user_file) else {}
-        if user_id in user:
-            user[user_id] = user_data
-            self._save(self.user_file, user)
-            return True
-        return False
+    def _ensure_file(self, file_path):
+        try:
+            with open(file_path, "r") as file:
+                content = file.read().strip()
+                if not content:
 
-    def delete_user(self, user_id: str) -> dict | None:
-        users = json.load(open(self.user_file)) if os.path.exists(self.user_file) else {}
-        if user_id in users:
-            del users[user_id]
-            self._save(self.user_file, users)
-            return True
-        return False
+                    with open(file_path, "w") as file:
+                        json.dump([], file)
+        except FileNotFoundError:
+            with open(file_path, "w") as file:
+                json.dump([], file)
 
-    def get_user(self, user_id: str) -> dict | None:
-        users = json.load(open(self.user_file)) if os.path.exists(self.user_file) else {}
-        return users.get(user_id)
+    def _load_file(self, file_path):
+        with open(file_path, "r") as file:
+            return json.load(file) 
 
-    def get_all_users(self) -> dict:
-        return json.load(open(self.user_file)) if os.path.exists(self.user_file) else {}
+    def _save_file(self, file_path, data):
+        with open(file_path, "w") as file:
+            json.dump(data, file, indent=4)
 
-    
+    def load_users(self):
+        users_data = self._load_file(self.user_file)
+        if not isinstance(users_data, list):
+            users_data = []
+        return [User.from_dict(user_dict) for user_dict in users_data]
 
-def add_note(self, note_id: str, note_data: data) -> None:
-        notes = json.load(open(self.note_file)) if os.path.exists(self.note_file) else {}
-        notes[note_id] = note_data
-        self._save(self.note_file, notes)
+    def save_users(self, users):
+        self._save_file(self.user_file, [user.to_dict() for user in users])
+
+    def load_notes(self):
+        notes_data = self._load_file(self.note_file)
+        return [Note(**note_dict) for note_dict in notes_data]
+
+    def save_notes(self, notes):
+        self._save_file(self.note_file, [note.to_dict() for note in notes])
