@@ -35,45 +35,27 @@ Delete a note:
 
     subparsers = parser.add_subparsers(dest="command")
 
-    # --------------------
-    # Add User
-    # --------------------
     user_parser = subparsers.add_parser("add-user")
     user_parser.add_argument("name")
     user_parser.add_argument("email")
     user_parser.add_argument("password")
 
-    # --------------------
-    # Add Note
-    # --------------------
     create_parser = subparsers.add_parser("add-note")
     create_parser.add_argument("id")
     create_parser.add_argument("title")
     create_parser.add_argument("content")
 
-    # --------------------
-    # List Notes
-    # --------------------
     subparsers.add_parser("list-notes")
 
-    # --------------------
-    # Update Note
-    # --------------------
     update_parser = subparsers.add_parser("update-note")
     update_parser.add_argument("id")
     update_parser.add_argument("content")
 
-    # --------------------
-    # Delete Note
-    # --------------------
     delete_parser = subparsers.add_parser("delete-note")
     delete_parser.add_argument("id")
 
     args = parser.parse_args()
 
-    # --------------------
-    # Command Handling
-    # --------------------
     if args.command == "add-user":
         user = User(args.name, args.email, args.password)
         users = storage.load_users()
@@ -82,9 +64,7 @@ Delete a note:
         print("User saved:", user.to_dict())
 
     elif args.command == "add-note":
-        # create the Note object using NoteManager for consistency
         note = note_manager.add_note(args.id, args.title, args.content)
-        # persist it using Storage
         notes = storage.load_notes()
         notes.append(note)
         storage.save_notes(notes)

@@ -33,12 +33,14 @@ class Storage:
 
     def load_users(self):
         users_data = self._load_file(self.user_file)
+        print(users_data)
         if not isinstance(users_data, list):
             users_data = []
         return [User.from_dict(user_dict) for user_dict in users_data]
 
     def save_users(self, users):
         self._save_file(self.user_file, [user.to_dict() for user in users])
+        print([user.to_dict() for user in users])
 
     def load_notes(self):
         notes_data = self._load_file(self.note_file)
