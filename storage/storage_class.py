@@ -44,7 +44,7 @@ class Storage:
 
     def load_notes(self):
         notes_data = self._load_file(self.note_file)
-        return [Note(**note_dict) for note_dict in notes_data]
+        return [Note.from_dict(note_dict) for note_dict in notes_data]
 
     def save_notes(self, notes):
         self._save_file(self.note_file, [note.to_dict() for note in notes])

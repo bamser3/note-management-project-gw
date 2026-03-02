@@ -3,10 +3,11 @@ from notes.note_manager import NoteManager
 from auth.auth_manager_class import User
 from storage.storage_class import Storage
 from auth.auth_manager_class import User
+from notes.note_class import Note
 
 storage = Storage()
 
-note_manager = NoteManager()
+note_manager = NoteManager(storage)
 
 
 def main():
@@ -64,8 +65,8 @@ Delete a note:
         print("User saved:", user.to_dict())
 
     elif args.command == "add-note":
-        note = note_manager.add_note(args.id, args.title, args.content)
         notes = storage.load_notes()
+        note = Note(args.id, args.title, args.content)
         notes.append(note)
         storage.save_notes(notes)
         print("Note saved:", note.to_dict())
@@ -74,12 +75,25 @@ Delete a note:
         print("Notes:", note_manager.get_notes())
 
     elif args.command == "update-note":
-        success = note_manager.update_note(args.id, args.content)
-        print("Updated!" if success else "Note not found.")
+        notes = storage.load_notes()
+        for note in notes:
+            if note.id == args.id:
+                note.update_content(args.content)
+                storage.save_notes(notes)
+                print("Updated!")
+                break
+        else:
+            print("Note not found.")
 
     elif args.command == "delete-note":
-        success = note_manager.delete_note(args.id)
-        print("Deleted!" if success else "Note not found.")
+        notes = storage.load_notes()
+        new_notes = [note for note in notes if note.id != args.id]
+
+        if len(new_notes) != len(notes):
+            storage.save_notes(new_notes)
+            print("Deleted!")
+        else:
+            print("Note not found.")
 
     else:
         parser.print_help()
