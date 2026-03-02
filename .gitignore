@@ -1,0 +1,27 @@
+# pytest cache directory
+.pytest_cache/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test reports (if you use junitxml or coverage)
+htmlcov/
+coverage.xml
+*.cover
+*.log
+
+# Temporary files created by pytest
+*.pytest_cache/
+*.tmp
+*.out
+*.err
+
+# VSCode / IDE-specific files (optional but common)
+.vscode/
+.idea/
+
+# OS-specific files (optional)
+.DS_Store
+Thumbs.db
