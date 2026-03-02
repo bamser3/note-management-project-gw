@@ -1,24 +1,13 @@
-import uuid
-
 class Note:
-
-    def __init__(self, title: str, content: str, user_id: str, status: str = "active"):
-        self.id = str(uuid.uuid4())
+    def __init__(self, note_id, title, content, user_id=None, tags=None, status="active"):
+        self.id = note_id
         self.title = title
         self.content = content
         self.user_id = user_id
-        self.tags = []
+        self.tags = tags or []
         self.status = status
 
-    def update(self, title: str = None, content: str = None, status: str = None):
-        if title:
-            self.title = title
-        if content:
-            self.content = content
-        if status:
-            self.status = status
-
-    def to_dict(self) -> dict:
+    def to_dict(self):
         return {
             "id": self.id,
             "title": self.title,
@@ -29,13 +18,12 @@ class Note:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Note":
-        note = cls(
+    def from_dict(cls, data):
+        return cls(
+            note_id=data["id"],
             title=data["title"],
             content=data["content"],
-            user_id=data["user_id"],
+            user_id=data.get("user_id"),
+            tags=data.get("tags"),
             status=data.get("status", "active")
         )
-        note.id = data["id"]
-        note.tags = data.get("tags", [])
-        return note
