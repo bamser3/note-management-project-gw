@@ -1,0 +1,26 @@
+[
+    {
+        "id": "47e647b8-55d4-46b4-9c0a-8503379896ec",
+        "name": "Peter",
+        "email": "peter@gmail.com",
+        "password_hash": "$2b$12$WeuFsaYsfIpONDb5qq/GRe2JgPe/Xh3bAg1m38ggxFPg4v70cSdSm",
+        "role": "user",
+        "created_at": "2026-03-02T00:40:50.089662"
+    },
+    {
+        "id": "c24ca543-1b2f-45b7-813b-85f61a35fd96",
+        "name": "Peter",
+        "email": "peter@gmail.com",
+        "password_hash": "$2b$12$QawEMwL1JkZvhO7YPCPJXui10jwlCLvciYbFaOFZfzLJ20aWuKNqC",
+        "role": "user",
+        "created_at": "2026-03-02T10:03:17.888490"
+    },
+    {
+        "id": "5a4ab32f-71fd-461f-bb0f-d3649d5b1aee",
+        "name": "Peter",
+        "email": "peter@gmail.com",
+        "password_hash": "$2b$12$kY8zCymxcIWgFpjDxwk9beaFO.1P30NIeRMP70xgexECTGxvzym3K",
+        "role": "user",
+        "created_at": "2026-03-02T10:03:24.326163"
+    }
+]
